@@ -33,7 +33,6 @@ public class EvasiveManeuver : MonoBehaviour {
 
         while (true)
         {
-            //targetManeuver = Random.Range(1, dodge) * -Mathf.Sign(transform.position.x);
             if (playerTransform!=null) {
                 targetManeuver = playerTransform.position.x;
             }
