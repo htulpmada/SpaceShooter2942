@@ -6,6 +6,7 @@ public class DestroyByContact : MonoBehaviour {
 
     public GameObject explosion;
     public GameObject playerExplosion;
+    public GameObject mini;
     public int scoreValue;
     private GameController gameController;
 
@@ -36,6 +37,16 @@ public class DestroyByContact : MonoBehaviour {
         {
             Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
             gameController.GameOver();
+        }
+        if (tag == "boss")
+        {
+            Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
+            Instantiate(mini, other.transform.position, other.transform.rotation);
+            Instantiate(mini, other.transform.position, other.transform.rotation);
+            Instantiate(mini, other.transform.position, other.transform.rotation);
+            gameController.GameOver();
+            Destroy(gameObject);
+            return;
         }
         Debug.Log(other.name);
         
