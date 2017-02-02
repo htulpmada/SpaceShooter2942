@@ -5,8 +5,16 @@ using UnityEngine;
 public class Mover : MonoBehaviour {
     
     public float speed;
-	
+    private Rigidbody rb;
     void Start () {
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = transform.forward * speed;
 	}
+    private void Update()
+    {
+        if (rb.position.z > 30) {
+            Debug.Log("Out of bounds should delete now-----------------");
+            Destroy(gameObject);
+        }
+    }
 }

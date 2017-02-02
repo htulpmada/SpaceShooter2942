@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
         resart = false;
         restartButton.SetActive(false);
         gameOverText.text = "";
-        level = 0;
+        level = 50;//change for testing
         score = 0;
         updateLevel();
         updateScore();
@@ -45,8 +45,10 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(startWait * 2);
         while (true)
         {
+            pickUpCount = level / 4;
             for (int i = 0; i < pickUpCount; i++)
             {
+                Debug.Log("spawning pickup!!!!!!!!!!!!!!!!!!!!!");
                 GameObject pickUp = pickUps[Random.Range(0, pickUps.Length)];
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
@@ -65,9 +67,12 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(startWait);
         while (true)
         {   // test for level progression to bad guy ratio
-            for (int i = 0; i < hazardCount + level * 3; i++)
+            int difficulty = level;
+            if (difficulty > hazards.Length) { difficulty = hazards.Length; }
+            Debug.Log("spawning "+difficulty+" lv enemies");
+            for (int i = 0; i < hazardCount + level * 5; i++)
             {
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+                GameObject hazard = hazards[Random.Range(0, difficulty)];
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
@@ -108,7 +113,7 @@ public class GameController : MonoBehaviour {
     }
     void levelWarning()
     {
-        gameOverText.text = "Next Wave\n approches!!!\n" + "enemies: " + (hazardCount + level * 3);
+        gameOverText.text = "Next Wave\n approches!!!\n" + "enemies: " + (hazardCount + level * 5);
     }
 
     public void GameOver()
