@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
         resart = false;
         restartButton.SetActive(false);
         gameOverText.text = "";
-        level = 50;//change for testing
+        level = 0;//change for testing
         score = 0;
         updateLevel();
         updateScore();
