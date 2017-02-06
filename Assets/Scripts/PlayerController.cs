@@ -16,20 +16,23 @@ public class PlayerController : MonoBehaviour {
     public Boundary boundary;
     public GameObject shot;
     public Transform shotSpawn;
-    public Rigidbody tempRb;
     public SimpleTouchPad touchPad;
     public SimpleTouchAreaButton areaButton;
     public int weaponLv;
+    public int skipValue;
     public float weaponRotation;
     public float weaponSpeed;
-    private Quaternion calibrationQuaternion;
+
     private AudioSource audioSource;
     private float nextFire;
+    private float delayFire;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        delayFire = Time.time + (fireRate * weaponSpeed);
+
     }
 
     private void Update()
@@ -76,10 +79,15 @@ public class PlayerController : MonoBehaviour {
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
                     rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 3 * -weaponRotation);
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 90);
-                    Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -90);
-                    Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                    if (Time.time > delayFire)
+                    {
+                        delayFire = Time.time + (fireRate * weaponSpeed * skipValue);
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 87);
+                        Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -87);
+                        Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                       
+                    }
                     break;
                 case 4:
                     nextFire = Time.time + (fireRate * weaponSpeed);
@@ -92,18 +100,21 @@ public class PlayerController : MonoBehaviour {
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
                     rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 5 * -weaponRotation);
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 45);
-                    Instantiate(shot, rb.position, Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -45);
-                    Instantiate(shot, rb.position, Quaternion.Euler(rotationVector));
                     rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 10 * weaponRotation);
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
                     rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 10 * -weaponRotation);
                     Instantiate(shot, shotSpawn.position, Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 90);
-                    Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
-                    rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -90);
-                    Instantiate(shot, shotSpawn.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                    if (Time.time > delayFire) {
+                        delayFire = Time.time + (fireRate * weaponSpeed * skipValue);
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 87);
+                        Instantiate(shot, rb.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -87);
+                        Instantiate(shot, rb.position - new Vector3(0.0f, 0.0f, .15f), Quaternion.Euler(rotationVector));
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * 45);
+                        Instantiate(shot, rb.position, Quaternion.Euler(rotationVector));
+                        rotationVector = (new Vector3(0.0f, 1.0f, 0.0f) * -45);
+                        Instantiate(shot, rb.position, Quaternion.Euler(rotationVector));
+                    }
                     break;
 
             }

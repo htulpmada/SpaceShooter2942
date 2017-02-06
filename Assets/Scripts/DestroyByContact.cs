@@ -33,7 +33,12 @@ public class DestroyByContact : MonoBehaviour {
         Debug.Log(name + " " + tag + " collided with " + other.name + " " + other.tag);
         // need to restructure with nested if checks
 
-        
+
+        if (other.tag.CompareTo("Boundary")==0)
+        {
+            Debug.Log("return");
+            return;
+        }
         if (tag.CompareTo("PickUpW") == 0)
         {
             // player picks it up
@@ -46,11 +51,16 @@ public class DestroyByContact : MonoBehaviour {
                     p.weaponLv++;
                     Debug.Log("Picked it Up");
                 }
-            Destroy(gameObject);   
+            Destroy(gameObject);
+            Debug.Log(name + " got destroyed");
             return;
             }
-            if (other.tag.CompareTo("bolt") == 0) { Destroy(other.gameObject); }
+            if (other.tag.CompareTo("bolt") == 0) {
+                Destroy(other.gameObject);
+                Debug.Log(other.name + " got destroyed");
+            }
             // Enemy, boss, EnemyBolt should not destroy it  
+            Debug.Log("return");
             return;
         }
         else if (tag.CompareTo("BadPickUpW") == 0)
@@ -58,18 +68,24 @@ public class DestroyByContact : MonoBehaviour {
             // player picks it up
             if(other.tag == "Player")
             {
-                Debug.Log("Pick Up Here");
+                Debug.Log("Pick Up Bad Item");
                 int i = p.weaponLv;
                 if (i < 3)
                 {
                     p.weaponLv--;
-                    Debug.Log("Picked Up Bad item");
+                    Debug.Log("weapon Lv Down");
                 }
-            Destroy(gameObject);
-            return;
+                Destroy(gameObject);
+                Debug.Log(name + " got destroyed");
+                return;
             }
-            if (other.tag.CompareTo("bolt") == 0) { Destroy(other.gameObject); }
-             // Enemy, boss, EnemyBolt should not destroy it  
+            if (other.tag.CompareTo("bolt") == 0)
+            {
+                Destroy(other.gameObject);
+                Debug.Log(other.name + " got destroyed");
+            }
+            // Enemy, boss, EnemyBolt should not destroy it  
+            Debug.Log("return");
             return;
         }
         /*
@@ -122,45 +138,87 @@ public class DestroyByContact : MonoBehaviour {
         
         
         
+        */
         
         else if (tag.CompareTo("Enemy") == 0)
         {
             // should only be destroyed if hit with bolt
-            if(other.tag.CompareTo("bolt")==0){Destroy(gameObject);}
-        // should destroy player if collides
+            if(other.tag.CompareTo("bolt")==0)
+            {
+                if (explosion != null)
+                {
+                    Debug.Log(name + " exploded");
+                    Instantiate(explosion, transform.position, transform.rotation);
+                }
+                Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
+                gameController.addScore(scoreValue);
+                Destroy(other.gameObject);
+                Destroy(gameObject);
+            }
+            // should destroy player if collides
             if(other.tag.CompareTo("Player")==0)
             {
                 Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
                 gameController.GameOver();
+            }
+            else
+            {
+                Debug.Log("return");
+                return;
             }
 
         }
         else if (tag.CompareTo("EnemyBolt") == 0)
         {
             // destroy on contact with everything but Boundary
-            if(other.tag.CompareTo("Player")==0)
+            if (other.tag.CompareTo("Player") == 0)
             {
                 Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
                 gameController.GameOver();
+            }
+            else if (other.tag.CompareTo("bolt")==0)
+            {
+                Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
+                gameController.addScore(scoreValue);
+                Destroy(gameObject);
+                Destroy(other.gameObject);
+            }
+            else
+            {
+                Debug.Log("return");
+                return;
             }
         }
         else if (tag.CompareTo("bolt") == 0)
         {
             // not sure i need this either
             Destroy(other.gameObject);
+
         }
         else if (tag.CompareTo("boss") == 0)
         {
             // should be destroyed when hit with bolt then spawn Minis
-            if(other.tag.CompareTo("bolt")==0)
-        {
-            Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
-            Destroy(gameObject);
-            Destroy(other.gameObject);
-            Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-            Instantiate(mini, other.transform.position - new Vector3(1.25f, 0.0f, 0.0f), other.transform.rotation);
-            Instantiate(mini, other.transform.position + new Vector3(0.0f, 0.0f, 1), other.transform.rotation);
-            Instantiate(mini, other.transform.position + new Vector3(1.25f, 0.0f, 0.0f), other.transform.rotation);
+            if (other.tag.CompareTo("bolt") == 0)
+            {
+                if (explosion != null)
+                {
+                    Debug.Log(name + " exploded");
+                    Instantiate(explosion, transform.position, transform.rotation);
+                }
+                Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
+                Destroy(gameObject);
+                Destroy(other.gameObject);
+                Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
+                Instantiate(mini, other.transform.position - new Vector3(1.25f, 0.0f, 0.0f), other.transform.rotation);
+                Instantiate(mini, other.transform.position + new Vector3(0.0f, 0.0f, 1), other.transform.rotation);
+                Instantiate(mini, other.transform.position + new Vector3(1.25f, 0.0f, 0.0f), other.transform.rotation);
+                gameController.addScore(scoreValue);
+            }
+            else
+            {
+                Debug.Log("return");
+                return;
+            }
         }
         else if (tag.CompareTo("Boundary") == 0)
         {
@@ -168,13 +226,13 @@ public class DestroyByContact : MonoBehaviour {
             return;
         }
         else { }
-        
         if (explosion != null)
         {
             Debug.Log(name + " exploded");
             Instantiate(explosion, transform.position, transform.rotation);
         }
-        */
+
+
 
 
 
@@ -213,7 +271,7 @@ public class DestroyByContact : MonoBehaviour {
              Debug.Log("returned");
              Destroy(other.gameObject);
              return;
-         }*/
+         }
 
         if (tag == "Enemy" && other.tag == "Enemy")
         {
@@ -251,7 +309,7 @@ public class DestroyByContact : MonoBehaviour {
             return;
         }
 
-        if (tag == "boss" && other.tag != "boss")
+        /*if (tag == "boss" && other.tag != "boss")
         {
             Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
             Destroy(gameObject);
@@ -272,14 +330,14 @@ public class DestroyByContact : MonoBehaviour {
         if (explosion != null)
         {
             Debug.Log(name + " exploded");
-            Instantiate(explosion, transform.position, transform.rotation);
+            //Instantiate(explosion, transform.position, transform.rotation);
         }
         if (other.tag == "Player")
         {
             Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
             gameController.GameOver();
         }
-              
+        */
         Debug.Log(name + " " + tag + " and " + other.name + " " + other.tag + " got destroyed");
         gameController.addScore(scoreValue);
         Destroy(other.gameObject);
