@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
     public float weaponRotation;
     public float weaponSpeed;
 
+    private GameController gameController;
     private AudioSource audioSource;
     private float nextFire;
     private float delayFire;
@@ -32,11 +33,20 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         delayFire = Time.time + (fireRate * weaponSpeed);
-
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
     }
 
     private void Update()
     {
+        
+        if ( weaponLv < 0 && Time.time > nextFire * 5) {
+            weaponLv = 0;
+            gameController.addScore(250);
+        }
         if (areaButton.CanFire() && Time.time > nextFire)
         {
             Vector3 rotationVector;
